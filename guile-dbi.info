@@ -1,0 +1,480 @@
+This is guile-dbi.info, produced by makeinfo version 6.7 from
+guile_dbi.texi.
+
+
+File: guile-dbi.info,  Node: Top,  Next: Вступление,  Prev: (dir),  Up: (dir)
+
+Guile DBI Руководство
+*********************
+
+* Menu:
+
+* Вступление::
+* Учебник::
+* Руководство::
+* Устройство и драйверы баз данных::
+* Все функции::
+* Заключение::
+
+
+File: guile-dbi.info,  Node: Вступление,  Next: Учебник,  Prev: Top,  Up: Top
+
+1 Вступление
+************
+
+Это самостоятельная документация к Guile DBI, Guile Data Base
+Interface.  Она описывает, как использовать Guile DBI и как писать
+новые драйверы базы данных DBD.
+
+   Этот файл содержит информацию издания 2.1.6 справочного
+руководства, соответствующего Guile DBI версию 2.1.6.
+
+   guile-dbi обеспечивает простой, универсальный, легкий в
+использовании интерфейс scheme/guile к базам данных SQL, таких как
+Postgres, MySQL или SQLite.
+
+   Система разделена на две части: DBI (не зависит от базы данных)
+часть, которая обеспечивает интерфейс Scheme и DBD (зависит от базы
+данных), подключаемые модули, которые подключаются к реальному серверу
+SQL. В настоящее время существует DBD движки для Postgres, MySQL и
+SQLite3.
+
+* Menu:
+
+* История::
+* Вступление в Guile DBI::
+
+
+File: guile-dbi.info,  Node: История,  Next: Вступление в Guile DBI,  Prev: Вступление,  Up: Вступление
+
+1.1 История
+===========
+
+В 2004 годе Маурицио Boriani писал: << Я искал вокруг общей библиотеки
+баз данных для Guile реализации схемы и нашел несколько проектов.  Но
+они, на самом деле, на самом деле не 'динамические', просто
+скомпилированы с различным бэкэндом; Я искал то, что позволит мне
+управлять базой данных во время выполнения (например, DBI системы для
+Perl или PHP, TCL и так далее), но не нашел этого.  Итак, я пишу
+это.>>
+
+   В 2008 году Лина Vepstas писал: <<I искал общий интерфейс базы
+данных SQL для Guile, и это было только один, который был
+задокументирован и обещал работать.  Через несколько исправлений
+ошибок, он заработал, к моему удовлетворению, и теперь я использую его
+в одном из моих проектов (подсистема OpenCog NLP) .>>
+
+
+File: guile-dbi.info,  Node: Вступление в Guile DBI,  Prev: История,  Up: Вступление
+
+1.2 Вступление в Guile DBI
+==========================
+
+Вы можете найти последнюю версию Guile DBI на странице проекта, сайт
+проекта (https://github.com/opencog/guile-dbi/).
+
+   В области загрузки файла, есть DBI и драйвер тарболы.
+
+
+File: guile-dbi.info,  Node: Учебник,  Next: Руководство,  Prev: Вступление,  Up: Top
+
+2 Учебник
+*********
+
+Scheme интерфейс очень прост.  Есть только 5 функций: *note dbi-open:
+guile-dbi dbi-open, *note dbi-close: guile-dbi dbi-close, *note
+dbi-query: guile-dbi dbi-query, *note dbi-get_status: guile-dbi
+dbi-get_status. и *note dbi-get_row: guile-dbi dbi-get_row.
+
+   Guile DBI поддерживает любую базу данных, для которых пишется DBD
+бэкенд.  В настоящее время это MySQL, Postgres и SQLite.
+
+   Вот пример использования, для использования с SQLite3:
+
+     (use-modules (dbi dbi))
+
+     ;; Вход в базу данных.
+     (define db-obj (dbi-open "sqlite3" "my-example-db"))
+
+     ;; Создать таблицу.
+     (dbi-query db-obj "create table hellotable(id int, name varchar(15))")
+
+     ;; Посмотрите на статус возврата последней команды SQL
+     (display db-obj) (newline)
+
+     ;; Заполните таблицу значениями.
+     (dbi-query db-obj "insert into hellotable ('id', 'name') values('33', 'ola')")
+     (dbi-query db-obj "insert into hellotable ('id', 'name') values('34', 'dzien dobre')")
+     (dbi-query db-obj "insert into hellotable ('id', 'name') values('44', 'annyong haseyo')")
+     (display db-obj) (newline)
+
+     ;; Отображение каждой из строк таблицы, в свою очередь,.
+     (dbi-query db-obj "select * from hellotable")
+     (display db-obj) (newline)
+     (write (dbi-get_row db-obj)) (newline)
+     (write (dbi-get_row db-obj)) (newline)
+     (write (dbi-get_row db-obj)) (newline)
+     (write (dbi-get_row db-obj)) (newline)
+
+     ;; Закройте базу данных.
+     (dbi-close db-obj)
+     (display db-obj) (newline)
+
+
+   Вот еще один пример, с использованием базы данных MySQL. В этом
+примере предполагается, что сервер MySQL работает, и что таблица с
+именем "pippo" уже создана и заполнена данными:
+
+
+     #!/usr/bin/guile -e main -s
+     !#
+
+     (use-modules (dbi dbi))
+
+     (define ciccio (dbi-open "mysql" "user:pass:pluto:tcp:localhost:3306"))
+     (define ret #f)
+     ;; (define ciccio (dbi-open "mysql" "user:pass:pluto:socket:/tmp/mysql.sock"))
+
+     (define main
+       (lambda (args)
+         (display "HERE")(newline)
+         (display ciccio)(newline)
+         (dbi-query ciccio "select * from pippo")
+         (display ciccio)(newline)
+         (set! ret (dbi-get_row ciccio))
+         (while (not (equal? ret #f))
+     	   (display ret)(newline)
+     	   (set! ret (dbi-get_row ciccio))
+     	   )
+         (display ret)(newline)
+
+     ))
+
+
+   Ввод учетных данных для PostgreSQL, работа аналогично:
+
+     #!/usr/bin/guile -e main -s
+     !#
+
+     (use-modules (dbi dbi))
+
+     (define conxion (dbi-open "postgresql" "user:pass:pluto:tcp:localhost:5432"))
+     (define conxion (dbi-open "postgresql" "user:pass:pluto:socket:/var/run/postgresql"))
+
+
+File: guile-dbi.info,  Node: Руководство,  Next: Устройство и драйверы баз данных,  Prev: Учебник,  Up: Top
+
+3 Руководство
+*************
+
+* Menu:
+
+* Функции::
+
+
+File: guile-dbi.info,  Node: Функции,  Prev: Руководство,  Up: Руководство
+
+3.1 Функции
+===========
+
+ -- Function: dbi-open backend connString
+
+     Примитивная функция.
+     Попытка установки соединения BACKEND нагрузки и подключение к
+     базе данных используя CONNSTRING (строка соединения) для
+     установки функции подключения.
+
+     В случае успеха, возвращается объект 'db-handle', который будет
+     использоваться для ссылки на недавно открытые подключения к базе
+     данных.  Этот объект также содержит статус возврата.
+
+     Каждая DBD РЕАЛИЗАЦИЯ требует своего собственного формата строки
+     соединения, которые должны быть объяснены в файле README.
+
+     Например, для подключения к Postgres, используя TCP сокет, на
+     локальном хосте, на стандартном порту 5432 Postgres по умолчанию:
+
+
+          (dbi-open "postgresql" "user:pass:database:tcp:localhost:5432")
+
+
+ -- Function: dbi-query db-handle query
+
+     Примитивная функция.
+     Выполнить QUERY используя DB-HANDLE и получить статус возврата.
+
+     Пример:
+
+
+          (dbi-query db "select * from table")
+
+
+ -- Function: dbi-get_status db-handle
+
+     Примитивная функция.
+     Возвращается точечная пара car которой является статус возврата,
+     числовой код и cdr является строка состояния сообщения.
+     DB-HANDLE должен быть действительным дескриптором объекта базы
+     данных.
+
+ -- Function: dbi-get_row db-handle
+
+     Примитивная функция.
+     Функция вызывается после 'dbi-query', возвращает '#f' если нет
+     следующей строки для retrive; в противном случае она возвращает
+     пару.  car пары содержит имя поля и cdr является его значением.
+
+     пример:
+
+
+          (dbi-get_row db)
+
+
+ -- Function: dbi-close db-handle
+
+     Примитивная функция.
+     Эта функция закрывает DB-HANDLE и разыменовывает загруженный
+     драйвер базы данных.  Когда счетчик ссылок драйвера
+     устанавливается в 0, он освобождается.
+
+     пример:
+
+
+          (dbi-close db-handle)
+
+
+
+File: guile-dbi.info,  Node: Устройство и драйверы баз данных,  Next: Все функции,  Prev: Руководство,  Up: Top
+
+4 Устройство и драйверы баз данных
+**********************************
+
+* Menu:
+
+* Внутренние структуры::
+* Внутренние функции::
+* Как плагины загружаются::
+* Как писать плагины::
+
+
+File: guile-dbi.info,  Node: Внутренние структуры,  Next: Внутренние функции,  Prev: Устройство и драйверы баз данных,  Up: Устройство и драйверы баз данных
+
+4.1 Внутренние структуры
+========================
+
+Основная структура данных, используемая для хранения данных,
+необходимых Lib является:
+
+     typedef struct g_db_handle
+     {
+       SCM bcknd;   /* *note bcknd: guile-dbi bcknd. */
+       SCM constr;  /* *note constr: guile-dbi constr. */
+       SCM status;  /* *note status: guile-dbi status. Точечная пара: car = ошибка или числовой код,
+                       cdr = статус сообщения */
+       SCM closed;  /* *note closed: guile-dbi closed. Булево, TRUE если закрыт в противном случае FALSE */
+       void* handle; /* *note handle: guile-dbi handle. */
+       void* db_info; /* *note db_info: guile-dbi db_info. */
+       int in_free; /* *note in_free: guile-dbi in_free. булево, используется, чтобы избежать Alloc во время
+                       сбора мусора */
+     } gdbi_db_handle_t;
+
+   * 'bcknd'
+     присвоенное BACKEND имя (e.g.  mysql, postgresql, sqlite, ...).
+
+   * 'constr'
+     строка хранит строку подключения бэкенд.  Это не тронутый
+     guile-dbi, но передается “как есть” в Databse плагин.
+
+   * 'status'
+     это пара, которая используется для возврата информации из
+     внутреннего интерфейса в DBI библиотеки интерфейсов.  Его car это
+     возвращает номер кода состояния, cdr возврат статус сообщение.
+
+   * 'closed'
+     булево, #t если соединение закрывается, и #f иначе.
+
+   * 'handle'
+     является недействительным указателем используется для точки к
+     динамически загруженной фоновой библиотеке, заполнен dbi-open
+     __gdbi_dbd_wrap.  Установите “NULL” на закрытие соединения.
+
+   * 'db_info'
+     является недействительным указатель, используемый бэкэндом как
+     ловушка данных.  Установите “NULL” на закрытие соединения.
+
+   * 'in_free'
+     Логический флаг, используемый, чтобы избежать Alloc во время
+     сбора мусора.
+
+
+File: guile-dbi.info,  Node: Внутренние функции,  Next: Как плагины загружаются,  Prev: Внутренние структуры,  Up: Устройство и драйверы баз данных
+
+4.2 Внутренние функции
+======================
+
+ -- Function: void __gdbi_dbd_wrap (gdbi_db_handle_t* dbh, char*
+          function_name, void** function_pointer)
+
+     Эта функция используются для поиска и возврата в указателе
+     функции, фоновая функция для того, чтобы затенять основную DBI
+     библиотеку.  Она использует указатель (который указывает на
+     фоновую динамически загружаемую библиотеку) для поиска функции с
+     именем “__bcknd_function_name”.  В DBI функции интерфейса
+     (например, открытие, закрытие, запрос ...)  function_name
+     заполняются с использованием C “__FUNCTION__” макроса.  Код
+     состояния и сообщения возвращаются полем состояния dbh.
+
+ -- Function: void init_db_handle_type(void)
+     Используется для регистрации статических функций, используемых
+     для управления dbh SMOB.
+
+ -- Function: void init_dbi(void)
+     Используется, чтобы выставить guile-dbi символы так, чтобы из
+     scheme их можно было вызвать.
+
+
+File: guile-dbi.info,  Node: Как плагины загружаются,  Next: Как писать плагины,  Prev: Внутренние функции,  Up: Устройство и драйверы баз данных
+
+4.3 Как плагины загружаются
+===========================
+
+Все начинается в s_make_db_handle.  Эта функция использует dlopen для
+загрузки разделяемой библиотеки с именем “libguile-dbd-bcknd.so”.
+bcknd является первой парой из dbi-open.
+
+   Если разделяемая библиотека успешно загружена, dbh's поле “handle”
+заполняется указателем, возвращаемый “dlopen” и dbh->status также
+устанавливается.  В противном случае статус устанавливается в код
+ошибки в car, в то время как cdr заполняется сообщением об ошибке,
+возвращенной strerror.
+
+   После “dlopen” является ok, __gdbi_dbd_wrap используется для вызова
+бэкенд плагина подключения функции передав ей строку подключения.
+Если этот шаг также пройден успешно, то бэкенд должен быть подключен.
+В любой другой функции dbi интерфейса, после проверки типа,
+__gdbi_dbd_wrap используются для вызова функции dbd.  Когда близко
+называется, после dbd близкого возвращения, ссылка на связанный dbd
+декрементируется, пока не будет 0.
+
+
+File: guile-dbi.info,  Node: Как писать плагины,  Prev: Как плагины загружаются,  Up: Устройство и драйверы баз данных
+
+4.4 Как писать плагины
+======================
+
+Написание плагина довольно легко (взгляните на исходный код mysql,
+postgres или sqlite dbd).  Вам нужно будет поставить несколько функций
+с appropriiately выбранных имен.
+
+   Эти функции и возвращаемые типы устанавливаются хорошо на написаном
+dbd:
+
+ -- Function: void __bcknd_make_g_db_handle(gdbi_db_handle_t* dbh)
+     “bcknd” это имя, используемое в открытой функции.  Эта функция
+     должна разобрать строку соединения и использовать Params для
+     подключения к базе данных бэкенда dbd.  Статус возврата должен
+     быть установлен в dbh, чтобы вернуть полезную информацию.  Не
+     забудьте установить dbh поле “closed” в ложь, если соединение
+     установлено корректно.
+
+ -- Function: void __mysql_close_g_db_handle(gdbi_db_handle_t* dbh)
+     Закрыть соединение и выполнить любую необходимую очистку.  Не
+     забудьте сделать установку поля “closed” в истинное значение,
+     если соединение было правильно закрыто.
+
+ -- Function: void __mysql_query_g_db_handle(gdbi_db_handle_t* dbh,
+          char* query)
+     Это должно запустить запрос и установить статус, но не возвращает
+     ни одной строки.  Для возврата строк, функция GetRow должна быть
+     реализована.
+
+ -- Function: SCM __mysql_getrow_g_db_handle(gdbi_db_handle_t* dbh)
+     Эта функция должна возвращать одну строку из ранее выполненного
+     запроса.  Это, как правило, можно использовать более чем один
+     раз.  Когда больше нет доступных строк, #f должно быть
+     возвращено.
+
+     Возвращаемая строка должна быть ассоциативным списком, то есть,
+     списком пар, где car это имя поля, и cdr является его значение
+     (если это возможно, то значение следует использовать ближайшего
+     возможного типа guile/scheme).
+
+
+File: guile-dbi.info,  Node: Все функции,  Next: Заключение,  Prev: Устройство и драйверы баз данных,  Up: Top
+
+5 Все функции
+*************
+
+Функции DBI
+
+ [index ]
+* Menu:
+
+* dbi-close:                             Функции.            (line 59)
+* dbi-get_row:                           Функции.            (line 46)
+* dbi-get_status:                        Функции.            (line 38)
+* dbi-quiery:                            Функции.            (line 27)
+
+   Функции DBD
+
+ [index ]
+* Menu:
+
+* void init_dbi(void):                   Внутренние функции. (line 22)
+* void init_db_handle_type(void):        Внутренние функции. (line 18)
+* void __bcknd_make_g_db_handle(gdbi_db_handle_t* dbh): Как писать плагины.
+                                                             (line 13)
+* void __gdbi_dbd_wrap:                  Внутренние функции. (line  6)
+* void __mysql_close_g_db_handle(gdbi_db_handle_t* dbh): Как писать плагины.
+                                                             (line 21)
+* void __mysql_query_g_db_handle(gdbi_db_handle_t* dbh, char* query): Как писать плагины.
+                                                             (line 26)
+
+
+File: guile-dbi.info,  Node: Заключение,  Prev: Все функции,  Up: Top
+
+6 Заключение
+************
+
+Это все, на любые другие вопросы, смотреть исходный код :)
+
+   Этот документ был создан Линас Vepstas мая 18 2010, с
+использованием texi2html 1.78.  и пересобран Обинякиным Алексеем
+16.10.2020
+
+
+
+Tag Table:
+Node: Top79
+Node: Вступление423
+Node: История1780
+Node: Вступление в Guile DBI3188
+Node: Учебник3643
+Node: Руководство6911
+Node: Функции7137
+Ref: guile-dbi dbi-open7276
+Ref: guile-dbi dbi-query8509
+Ref: guile-dbi dbi-get_status8775
+Ref: guile-dbi dbi-get_row9222
+Ref: guile-dbi dbi-close9690
+Node: Устройство и драйверы баз данных10111
+Node: Внутренние структуры10556
+Ref: guile-dbi bcknd11883
+Ref: guile-dbi constr11981
+Ref: guile-dbi status12196
+Ref: guile-dbi closed12561
+Ref: guile-dbi handle12670
+Ref: guile-dbi db_info13021
+Ref: guile-dbi in_free13272
+Node: Внутренние функции13416
+Node: Как плагины загружаются15111
+Node: Как писать плагины16949
+Node: Все функции19892
+Node: Заключение21260
+
+End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:
