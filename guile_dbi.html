@@ -1,0 +1,569 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Библиотка DBI к Guile</title>
+
+<meta name="description" content="Библиотка DBI к Guile">
+<meta name="keywords" content="Библиотка DBI к Guile">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="#Top" rel="start" title="Top">
+<link href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" rel="index" title="Все функции">
+<link href="dir.html#Top" rel="up" title="(dir)">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<h1 class="settitle" align="center">Библиотка DBI к Guile</h1>
+
+
+
+<span id="Top"></span><div class="header">
+<p>
+Next: <a href="#g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435" accesskey="n" rel="next">Вступление</a>, Previous: <a href="dir.html#Top" accesskey="p" rel="prev">(dir)</a>, Up: <a href="dir.html#Top" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Guile-DBI-Rukovodstvo"></span><h1 class="top">Guile DBI Руководство</h1>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435" accesskey="1">Вступление</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0423_0447_0435_0431_043d_0438_043a" accesskey="2">Учебник</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0420_0443_043a_043e_0432_043e_0434_0441_0442_0432_043e" accesskey="3">Руководство</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0423_0441_0442_0440_043e_0439_0441_0442_0432_043e-_0438-_0434_0440_0430_0439_0432_0435_0440_044b-_0431_0430_0437-_0434_0430_043d_043d_044b_0445" accesskey="4">Устройство и драйверы баз данных</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" rel="index" accesskey="5">Все функции</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0417_0430_043a_043b_044e_0447_0435_043d_0438_0435" accesskey="6">Заключение</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<span id="g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435"></span><div class="header">
+<p>
+Next: <a href="#g_t_0423_0447_0435_0431_043d_0438_043a" accesskey="n" rel="next">Учебник</a>, Previous: <a href="#Top" accesskey="p" rel="prev">Top</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Vstuplenie"></span><h2 class="chapter">1 Вступление</h2>
+<p>Это самостоятельная документация к Guile DBI, Guile Data Base Interface.
+Она описывает, как использовать Guile DBI и как писать новые драйверы базы
+данных DBD.
+</p>
+<p>Этот файл содержит информацию издания 2.1.6 справочного руководства,
+соответствующего Guile DBI версию 2.1.6.
+</p>
+
+<p>guile-dbi обеспечивает простой, универсальный, легкий в использовании
+интерфейс scheme/guile к базам данных SQL, таких как Postgres, MySQL или
+SQLite.
+</p>
+<p>Система разделена на две части: DBI (не зависит от базы данных) часть,
+которая обеспечивает интерфейс Scheme и DBD (зависит от базы данных),
+подключаемые модули, которые подключаются к реальному серверу SQL.  В
+настоящее время существует DBD движки для Postgres, MySQL и SQLite3.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0418_0441_0442_043e_0440_0438_044f" accesskey="1">История</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435-_0432-Guile-DBI" accesskey="2">Вступление в Guile DBI</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<span id="g_t_0418_0441_0442_043e_0440_0438_044f"></span><div class="header">
+<p>
+Next: <a href="#g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435-_0432-Guile-DBI" accesskey="n" rel="next">Вступление в Guile DBI</a>, Previous: <a href="#g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435" accesskey="p" rel="prev">Вступление</a>, Up: <a href="#g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435" accesskey="u" rel="up">Вступление</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Istoriya"></span><h3 class="section">1.1 История</h3>
+<p>В 2004 годе Маурицио Boriani писал: &lt;&lt; Я искал вокруг общей библиотеки баз
+данных для Guile реализации схемы и нашел несколько проектов.  Но они, на
+самом деле, на самом деле не &rsquo;динамические&rsquo;, просто скомпилированы с
+различным бэкэндом; Я искал то, что позволит мне управлять базой данных
+во время выполнения (например, DBI системы для Perl или PHP, TCL и так
+далее), но не нашел этого.  Итак, я пишу это.&gt;&gt;
+</p>
+<p>В 2008 году Лина Vepstas писал: &lt;&lt;I искал общий интерфейс базы данных SQL для
+Guile, и это было только один, который был задокументирован и обещал
+работать.  Через несколько исправлений ошибок, он заработал, к моему
+удовлетворению, и теперь я использую его в одном из моих проектов (подсистема
+OpenCog NLP) .&gt;&gt;
+</p>
+<hr>
+<span id="g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435-_0432-Guile-DBI"></span><div class="header">
+<p>
+Previous: <a href="#g_t_0418_0441_0442_043e_0440_0438_044f" accesskey="p" rel="prev">История</a>, Up: <a href="#g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435" accesskey="u" rel="up">Вступление</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Vstuplenie-v-Guile-DBI"></span><h3 class="section">1.2 Вступление в Guile DBI</h3>
+<p>Вы можете найти последнюю версию Guile DBI на странице проекта,
+<a href="https://github.com/opencog/guile-dbi/">сайт проекта</a>.
+</p>
+
+<p>В области загрузки файла, есть DBI и драйвер тарболы.
+</p>
+<hr>
+<span id="g_t_0423_0447_0435_0431_043d_0438_043a"></span><div class="header">
+<p>
+Next: <a href="#g_t_0420_0443_043a_043e_0432_043e_0434_0441_0442_0432_043e" accesskey="n" rel="next">Руководство</a>, Previous: <a href="#g_t_0412_0441_0442_0443_043f_043b_0435_043d_0438_0435" accesskey="p" rel="prev">Вступление</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Uchebnik"></span><h2 class="chapter">2 Учебник</h2>
+<p>Scheme интерфейс очень прост. Есть только 5 функций: <a href="#guile_002ddbi-dbi_002dopen">dbi-open</a>,
+<a href="#guile_002ddbi-dbi_002dclose">dbi-close</a>, <a href="#guile_002ddbi-dbi_002dquery">dbi-query</a>,
+<a href="#guile_002ddbi-dbi_002dget_005fstatus">dbi-get_status</a> и <a href="#guile_002ddbi-dbi_002dget_005frow">dbi-get_row</a>.
+</p>
+
+<p>Guile DBI поддерживает любую базу данных, для которых пишется DBD бэкенд.
+В настоящее время это MySQL, Postgres и SQLite.
+</p>
+<p>Вот пример использования, для использования с SQLite3:
+</p>
+<div class="example">
+<pre class="example">(use-modules (dbi dbi))
+
+;; Вход в базу данных.
+(define db-obj (dbi-open &quot;sqlite3&quot; &quot;my-example-db&quot;))
+
+;; Создать таблицу.
+(dbi-query db-obj &quot;create table hellotable(id int, name varchar(15))&quot;)
+
+;; Посмотрите на статус возврата последней команды SQL
+(display db-obj) (newline)
+
+;; Заполните таблицу значениями.
+(dbi-query db-obj &quot;insert into hellotable ('id', 'name') values('33', 'ola')&quot;)
+(dbi-query db-obj &quot;insert into hellotable ('id', 'name') values('34', 'dzien dobre')&quot;)
+(dbi-query db-obj &quot;insert into hellotable ('id', 'name') values('44', 'annyong haseyo')&quot;)
+(display db-obj) (newline)
+
+;; Отображение каждой из строк таблицы, в свою очередь,.
+(dbi-query db-obj &quot;select * from hellotable&quot;)
+(display db-obj) (newline)
+(write (dbi-get_row db-obj)) (newline)
+(write (dbi-get_row db-obj)) (newline)
+(write (dbi-get_row db-obj)) (newline)
+(write (dbi-get_row db-obj)) (newline)
+
+;; Закройте базу данных.
+(dbi-close db-obj)
+(display db-obj) (newline)
+
+</pre></div>
+
+<p>Вот еще один пример, с использованием базы данных MySQL.  В этом примере
+предполагается, что сервер MySQL работает, и что таблица с именем &quot;pippo&quot;
+уже создана и заполнена данными:
+</p>
+<div class="example">
+<pre class="example"> 	
+#!/usr/bin/guile -e main -s
+!#
+
+(use-modules (dbi dbi))
+
+(define ciccio (dbi-open &quot;mysql&quot; &quot;user:pass:pluto:tcp:localhost:3306&quot;))
+(define ret #f)
+;; (define ciccio (dbi-open &quot;mysql&quot; &quot;user:pass:pluto:socket:/tmp/mysql.sock&quot;))
+
+(define main
+  (lambda (args)
+    (display &quot;HERE&quot;)(newline)
+    (display ciccio)(newline)
+    (dbi-query ciccio &quot;select * from pippo&quot;)
+    (display ciccio)(newline)
+    (set! ret (dbi-get_row ciccio))
+    (while (not (equal? ret #f))
+	   (display ret)(newline)
+	   (set! ret (dbi-get_row ciccio))
+	   )
+    (display ret)(newline)
+
+))
+
+</pre></div>
+
+
+<p>Ввод учетных данных для PostgreSQL, работа аналогично:
+</p>
+<div class="example">
+<pre class="example">#!/usr/bin/guile -e main -s
+!#
+
+(use-modules (dbi dbi))
+
+(define conxion (dbi-open &quot;postgresql&quot; &quot;user:pass:pluto:tcp:localhost:5432&quot;))
+(define conxion (dbi-open &quot;postgresql&quot; &quot;user:pass:pluto:socket:/var/run/postgresql&quot;))
+</pre></div>
+
+<hr>
+<span id="g_t_0420_0443_043a_043e_0432_043e_0434_0441_0442_0432_043e"></span><div class="header">
+<p>
+Next: <a href="#g_t_0423_0441_0442_0440_043e_0439_0441_0442_0432_043e-_0438-_0434_0440_0430_0439_0432_0435_0440_044b-_0431_0430_0437-_0434_0430_043d_043d_044b_0445" accesskey="n" rel="next">Устройство и драйверы баз данных</a>, Previous: <a href="#g_t_0423_0447_0435_0431_043d_0438_043a" accesskey="p" rel="prev">Учебник</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Rukovodstvo"></span><h2 class="chapter">3 Руководство</h2>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0424_0443_043d_043a_0446_0438_0438" accesskey="1">Функции</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<span id="g_t_0424_0443_043d_043a_0446_0438_0438"></span><div class="header">
+<p>
+Previous: <a href="#g_t_0420_0443_043a_043e_0432_043e_0434_0441_0442_0432_043e" accesskey="p" rel="prev">Руководство</a>, Up: <a href="#g_t_0420_0443_043a_043e_0432_043e_0434_0441_0442_0432_043e" accesskey="u" rel="up">Руководство</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Funkcii"></span><h3 class="section">3.1 Функции</h3>
+
+<span id="guile_002ddbi-dbi_002dopen"></span><dl>
+<dt id="index-dbi_002dopen">Function: <strong>dbi-open</strong> <em>backend connString</em></dt>
+<dd>
+<p>Примитивная функция.<br>
+Попытка установки соединения <var>backend</var> нагрузки и подключение к базе данных
+используя <var>connString</var> (строка соединения) для установки функции подключения.
+</p>
+<p>В случае успеха, возвращается объект <code>db-handle</code>, который будет использоваться
+для ссылки на недавно открытые подключения к базе данных.  Этот объект также
+содержит статус возврата.
+</p>
+<p>Каждая DBD РЕАЛИЗАЦИЯ требует своего собственного формата строки соединения,
+которые должны быть объяснены в файле README.
+</p>
+<p>Например, для подключения к Postgres, используя TCP сокет, на локальном
+хосте, на стандартном порту 5432 Postgres по умолчанию:
+</p>
+<div class="example">
+<pre class="example"> 	
+(dbi-open &quot;postgresql&quot; &quot;user:pass:database:tcp:localhost:5432&quot;)
+
+</pre></div>
+</dd></dl>
+
+<span id="index-dbi_002dquiery"></span>
+<span id="guile_002ddbi-dbi_002dquery"></span><dl>
+<dt id="index-dbi_002dquery">Function: <strong>dbi-query</strong> <em>db-handle query</em></dt>
+<dd>
+<p>Примитивная функция.<br>
+Выполнить <var>query</var> используя <var>db-handle</var> и получить статус возврата.
+</p>
+<p>Пример:
+</p>
+<div class="example">
+<pre class="example">
+
+(dbi-query db &quot;select * from table&quot;)
+
+</pre></div>
+</dd></dl>
+
+<span id="index-dbi_002dget_005fstatus"></span>
+<span id="guile_002ddbi-dbi_002dget_005fstatus"></span><dl>
+<dt id="index-dbi_002dget_005fstatus-1">Function: <strong>dbi-get_status</strong> <em>db-handle</em></dt>
+<dd>
+<p>Примитивная функция.<br>
+Возвращается точечная пара car которой является статус возврата, числовой код
+и cdr является строка состояния сообщения.  <var>db-handle</var> должен быть
+действительным дескриптором объекта базы данных.
+</p></dd></dl>
+
+<span id="index-dbi_002dget_005frow"></span>
+<span id="guile_002ddbi-dbi_002dget_005frow"></span><dl>
+<dt id="index-dbi_002dget_005frow-1">Function: <strong>dbi-get_row</strong> <em>db-handle</em></dt>
+<dd>
+<p>Примитивная функция.<br>
+Функция вызывается после <code>dbi-query</code>, возвращает <code>#f</code> если нет следующей строки
+для retrive; в противном случае она возвращает пару. car пары содержит имя
+поля и cdr является его значением.
+</p>
+<p>пример:
+</p>
+<div class="example">
+<pre class="example">
+
+(dbi-get_row db)
+
+</pre></div>
+</dd></dl>
+
+<span id="index-dbi_002dclose"></span>
+<span id="guile_002ddbi-dbi_002dclose"></span><dl>
+<dt id="index-dbi_002dclose-1">Function: <strong>dbi-close</strong> <em>db-handle</em></dt>
+<dd>
+<p>Примитивная функция.<br>
+Эта функция закрывает <var>db-handle</var> и разыменовывает загруженный драйвер базы
+данных. Когда счетчик ссылок драйвера устанавливается в 0, он освобождается.
+</p>
+<p>пример:
+</p>
+<div class="example">
+<pre class="example">
+
+(dbi-close db-handle)
+
+</pre></div>
+</dd></dl>
+
+<hr>
+<span id="g_t_0423_0441_0442_0440_043e_0439_0441_0442_0432_043e-_0438-_0434_0440_0430_0439_0432_0435_0440_044b-_0431_0430_0437-_0434_0430_043d_043d_044b_0445"></span><div class="header">
+<p>
+Next: <a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" accesskey="n" rel="next">Все функции</a>, Previous: <a href="#g_t_0420_0443_043a_043e_0432_043e_0434_0441_0442_0432_043e" accesskey="p" rel="prev">Руководство</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Ustroistvo-i-draivery-baz-dannykh"></span><h2 class="chapter">4 Устройство и драйверы баз данных</h2>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0441_0442_0440_0443_043a_0442_0443_0440_044b" accesskey="1">Внутренние структуры</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0444_0443_043d_043a_0446_0438_0438" accesskey="2">Внутренние функции</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#g_t_041a_0430_043a-_043f_043b_0430_0433_0438_043d_044b-_0437_0430_0433_0440_0443_0436_0430_044e_0442_0441_044f" accesskey="3">Как плагины загружаются</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#g_t_041a_0430_043a-_043f_0438_0441_0430_0442_044c-_043f_043b_0430_0433_0438_043d_044b" accesskey="4">Как писать плагины</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<span id="g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0441_0442_0440_0443_043a_0442_0443_0440_044b"></span><div class="header">
+<p>
+Next: <a href="#g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0444_0443_043d_043a_0446_0438_0438" accesskey="n" rel="next">Внутренние функции</a>, Previous: <a href="#g_t_0423_0441_0442_0440_043e_0439_0441_0442_0432_043e-_0438-_0434_0440_0430_0439_0432_0435_0440_044b-_0431_0430_0437-_0434_0430_043d_043d_044b_0445" accesskey="p" rel="prev">Устройство и драйверы баз данных</a>, Up: <a href="#g_t_0423_0441_0442_0440_043e_0439_0441_0442_0432_043e-_0438-_0434_0440_0430_0439_0432_0435_0440_044b-_0431_0430_0437-_0434_0430_043d_043d_044b_0445" accesskey="u" rel="up">Устройство и драйверы баз данных</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Vnutrennie-struktury"></span><h3 class="section">4.1 Внутренние структуры</h3>
+
+<p>Основная структура данных, используемая для хранения данных, необходимых
+Lib является:
+</p>
+<div class="display">
+<pre class="display">typedef struct g_db_handle
+{
+  SCM bcknd;   /* <a href="#guile_002ddbi-bcknd">bcknd</a> */
+  SCM constr;  /* <a href="#guile_002ddbi-constr">constr</a> */
+  SCM status;  /* <a href="#guile_002ddbi-status">status</a> Точечная пара: car = ошибка или числовой код,
+                  cdr = статус сообщения */
+  SCM closed;  /* <a href="#guile_002ddbi-closed">closed</a> Булево, TRUE если закрыт в противном случае FALSE */
+  void* handle; /* <a href="#guile_002ddbi-handle">handle</a> */
+  void* db_info; /* <a href="#guile_002ddbi-db_005finfo">db_info</a> */
+  int in_free; /* <a href="#guile_002ddbi-in_005ffree">in_free</a> булево, используется, чтобы избежать Alloc во время
+                  сбора мусора */
+} gdbi_db_handle_t;
+</pre></div>
+
+<ul>
+<li> <code>bcknd</code> <span id="guile_002ddbi-bcknd"></span><br>
+присвоенное BACKEND имя (e.g. mysql, postgresql, sqlite, ...).
+
+</li><li> <code>constr</code> <span id="guile_002ddbi-constr"></span><br>
+строка хранит строку подключения бэкенд.  Это не тронутый guile-dbi,
+но передается “как есть” в Databse плагин.
+
+</li><li> <code>status</code> <span id="guile_002ddbi-status"></span><br>
+это пара, которая используется для возврата информации из внутреннего
+интерфейса в DBI библиотеки интерфейсов.  Его car это возвращает номер кода
+состояния, cdr возврат статус сообщение.
+
+</li><li> <code>closed</code> <span id="guile_002ddbi-closed"></span><br>
+булево, #t если соединение закрывается, и #f иначе.
+
+</li><li> <code>handle</code> <span id="guile_002ddbi-handle"></span><br>
+является недействительным указателем используется для точки к
+динамически загруженной фоновой библиотеке, заполнен
+dbi-open __gdbi_dbd_wrap.  Установите “NULL” на закрытие соединения.
+
+</li><li> <code>db_info</code> <span id="guile_002ddbi-db_005finfo"></span><br>
+является недействительным указатель, используемый бэкэндом как
+ловушка данных.  Установите “NULL” на закрытие соединения.
+
+</li><li> <code>in_free</code> <span id="guile_002ddbi-in_005ffree"></span><br>
+Логический флаг, используемый, чтобы избежать Alloc во время сбора
+мусора.
+
+</li></ul>
+
+<hr>
+<span id="g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0444_0443_043d_043a_0446_0438_0438"></span><div class="header">
+<p>
+Next: <a href="#g_t_041a_0430_043a-_043f_043b_0430_0433_0438_043d_044b-_0437_0430_0433_0440_0443_0436_0430_044e_0442_0441_044f" accesskey="n" rel="next">Как плагины загружаются</a>, Previous: <a href="#g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0441_0442_0440_0443_043a_0442_0443_0440_044b" accesskey="p" rel="prev">Внутренние структуры</a>, Up: <a href="#g_t_0423_0441_0442_0440_043e_0439_0441_0442_0432_043e-_0438-_0434_0440_0430_0439_0432_0435_0440_044b-_0431_0430_0437-_0434_0430_043d_043d_044b_0445" accesskey="u" rel="up">Устройство и драйверы баз данных</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Vnutrennie-funkcii"></span><h3 class="section">4.2 Внутренние функции</h3>
+
+<span id="index-void-_005f_005fgdbi_005fdbd_005fwrap"></span>
+<dl>
+<dt id="index-void">Function: <strong>void</strong> <em>__gdbi_dbd_wrap (gdbi_db_handle_t* dbh, char* function_name, void** function_pointer)</em></dt>
+<dd>
+<p>Эта функция используются для поиска и возврата в указателе функции, фоновая
+функция для того, чтобы затенять основную DBI библиотеку.  Она использует
+указатель (который указывает на фоновую динамически загружаемую библиотеку)
+для поиска функции с именем “__bcknd_function_name”.  В DBI функции
+интерфейса (например, открытие, закрытие, запрос ...) <var>function_name</var>
+заполняются с использованием C “__FUNCTION__” макроса.  Код состояния и
+сообщения возвращаются полем состояния dbh.
+</p></dd></dl>
+
+<span id="index-void-init_005fdb_005fhandle_005ftype_0028void_0029"></span>
+<dl>
+<dt id="index-void-1">Function: <strong>void</strong> <em>init_db_handle_type(void)</em></dt>
+<dd><p>Используется для регистрации статических функций, используемых для
+управления dbh SMOB.
+</p></dd></dl>
+
+<span id="index-void-init_005fdbi_0028void_0029"></span>
+<dl>
+<dt id="index-void-2">Function: <strong>void</strong> <em>init_dbi(void)</em></dt>
+<dd><p>Используется, чтобы выставить guile-dbi символы так, чтобы из scheme их можно
+было вызвать.
+</p></dd></dl>
+
+<hr>
+<span id="g_t_041a_0430_043a-_043f_043b_0430_0433_0438_043d_044b-_0437_0430_0433_0440_0443_0436_0430_044e_0442_0441_044f"></span><div class="header">
+<p>
+Next: <a href="#g_t_041a_0430_043a-_043f_0438_0441_0430_0442_044c-_043f_043b_0430_0433_0438_043d_044b" accesskey="n" rel="next">Как писать плагины</a>, Previous: <a href="#g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0444_0443_043d_043a_0446_0438_0438" accesskey="p" rel="prev">Внутренние функции</a>, Up: <a href="#g_t_0423_0441_0442_0440_043e_0439_0441_0442_0432_043e-_0438-_0434_0440_0430_0439_0432_0435_0440_044b-_0431_0430_0437-_0434_0430_043d_043d_044b_0445" accesskey="u" rel="up">Устройство и драйверы баз данных</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Kak-plaginy-zagruzhaiutsya"></span><h3 class="section">4.3 Как плагины загружаются</h3>
+
+<p>Все начинается в s_make_db_handle.  Эта функция использует dlopen для
+загрузки разделяемой библиотеки с именем “libguile-dbd-bcknd.so”.  bcknd
+является первой парой из dbi-open.
+</p>
+
+<p>Если разделяемая библиотека успешно загружена, dbh&rsquo;s поле “handle”
+заполняется указателем, возвращаемый “dlopen” и dbh-&gt;status также
+устанавливается.  В противном случае статус устанавливается в код ошибки в
+car, в то время как cdr заполняется сообщением об ошибке, возвращенной
+strerror.
+</p>
+
+<p>После “dlopen” является ok, __gdbi_dbd_wrap используется для вызова бэкенд
+плагина подключения функции передав ей строку подключения.  Если этот шаг
+также пройден успешно, то бэкенд должен быть подключен.
+В любой другой функции dbi интерфейса, после проверки типа,  __gdbi_dbd_wrap
+используются для вызова функции dbd.  Когда близко называется, после dbd
+близкого возвращения, ссылка на связанный dbd декрементируется, пока не будет
+0.
+</p>
+<hr>
+<span id="g_t_041a_0430_043a-_043f_0438_0441_0430_0442_044c-_043f_043b_0430_0433_0438_043d_044b"></span><div class="header">
+<p>
+Previous: <a href="#g_t_041a_0430_043a-_043f_043b_0430_0433_0438_043d_044b-_0437_0430_0433_0440_0443_0436_0430_044e_0442_0441_044f" accesskey="p" rel="prev">Как плагины загружаются</a>, Up: <a href="#g_t_0423_0441_0442_0440_043e_0439_0441_0442_0432_043e-_0438-_0434_0440_0430_0439_0432_0435_0440_044b-_0431_0430_0437-_0434_0430_043d_043d_044b_0445" accesskey="u" rel="up">Устройство и драйверы баз данных</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Kak-pisatx-plaginy"></span><h3 class="section">4.4 Как писать плагины</h3>
+
+<p>Написание плагина довольно легко (взгляните на исходный код mysql, postgres
+или sqlite dbd).  Вам нужно будет поставить несколько функций с
+appropriiately выбранных имен.
+</p>
+
+<p>Эти функции и возвращаемые типы устанавливаются хорошо на написаном dbd:
+</p>
+<span id="index-void-_005f_005fbcknd_005fmake_005fg_005fdb_005fhandle_0028gdbi_005fdb_005fhandle_005ft_002a-dbh_0029"></span>
+<dl>
+<dt id="index-void-3">Function: <strong>void</strong> <em>__bcknd_make_g_db_handle(gdbi_db_handle_t* dbh)</em></dt>
+<dd><p>“bcknd” это имя, используемое в открытой функции.  Эта функция должна
+разобрать строку соединения и использовать Params для подключения к базе
+данных бэкенда dbd.  Статус возврата должен быть установлен в dbh, чтобы
+вернуть полезную информацию.  Не забудьте установить dbh поле “closed” в
+ложь, если соединение установлено корректно.
+</p></dd></dl>
+
+<span id="index-void-_005f_005fmysql_005fclose_005fg_005fdb_005fhandle_0028gdbi_005fdb_005fhandle_005ft_002a-dbh_0029"></span>
+<dl>
+<dt id="index-void-4">Function: <strong>void</strong> <em>__mysql_close_g_db_handle(gdbi_db_handle_t* dbh)</em></dt>
+<dd><p>Закрыть соединение и выполнить любую необходимую очистку.  Не забудьте
+сделать установку поля “closed” в истинное значение, если соединение было
+правильно закрыто.
+</p></dd></dl>
+
+<span id="index-void-_005f_005fmysql_005fquery_005fg_005fdb_005fhandle_0028gdbi_005fdb_005fhandle_005ft_002a-dbh_002c-char_002a-query_0029"></span>
+<dl>
+<dt id="index-void-5">Function: <strong>void</strong> <em>__mysql_query_g_db_handle(gdbi_db_handle_t* dbh, char* query)</em></dt>
+<dd><p>Это должно запустить запрос и установить статус, но не возвращает ни одной
+строки.  Для возврата строк, функция GetRow должна быть реализована.
+</p></dd></dl>
+
+<dl>
+<dt id="index-SCM">Function: <strong>SCM</strong> <em>__mysql_getrow_g_db_handle(gdbi_db_handle_t* dbh)</em></dt>
+<dd><p>Эта функция должна возвращать одну строку из ранее выполненного запроса.
+Это, как правило, можно использовать более чем один раз.  Когда больше нет
+доступных строк, #f должно быть возвращено.
+</p>
+<p>Возвращаемая строка должна быть ассоциативным списком, то есть, списком пар,
+где car это имя поля, и cdr является его значение (если это возможно, то
+значение следует использовать ближайшего возможного типа guile/scheme).
+</p></dd></dl>
+
+<hr>
+<span id="g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438"></span><div class="header">
+<p>
+Next: <a href="#g_t_0417_0430_043a_043b_044e_0447_0435_043d_0438_0435" accesskey="n" rel="next">Заключение</a>, Previous: <a href="#g_t_0423_0441_0442_0440_043e_0439_0441_0442_0432_043e-_0438-_0434_0440_0430_0439_0432_0435_0440_044b-_0431_0430_0437-_0434_0430_043d_043d_044b_0445" accesskey="p" rel="prev">Устройство и драйверы баз данных</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Vse-funkcii"></span><h2 class="chapter">5 Все функции</h2>
+<p>Функции DBI
+</p><table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438_aa_letter-D"><b>D</b></a>
+ &nbsp; 
+</td></tr></table>
+<table class="index-aa" border="0">
+<tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th id="g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438_aa_letter-D">D</th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-dbi_002dclose">dbi-close</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_0424_0443_043d_043a_0446_0438_0438">Функции</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-dbi_002dget_005frow">dbi-get_row</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_0424_0443_043d_043a_0446_0438_0438">Функции</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-dbi_002dget_005fstatus">dbi-get_status</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_0424_0443_043d_043a_0446_0438_0438">Функции</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-dbi_002dquiery">dbi-quiery</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_0424_0443_043d_043a_0446_0438_0438">Функции</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+</table>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438_aa_letter-D"><b>D</b></a>
+ &nbsp; 
+</td></tr></table>
+<p>Функции DBD
+</p><table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438_ab_letter-V"><b>V</b></a>
+ &nbsp; 
+</td></tr></table>
+<table class="index-ab" border="0">
+<tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th id="g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438_ab_letter-V">V</th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-void-init_005fdbi_0028void_0029">void init_dbi(void)</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0444_0443_043d_043a_0446_0438_0438">Внутренние функции</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-void-init_005fdb_005fhandle_005ftype_0028void_0029">void init_db_handle_type(void)</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0444_0443_043d_043a_0446_0438_0438">Внутренние функции</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-void-_005f_005fbcknd_005fmake_005fg_005fdb_005fhandle_0028gdbi_005fdb_005fhandle_005ft_002a-dbh_0029">void __bcknd_make_g_db_handle(gdbi_db_handle_t* dbh)</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_041a_0430_043a-_043f_0438_0441_0430_0442_044c-_043f_043b_0430_0433_0438_043d_044b">Как писать плагины</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-void-_005f_005fgdbi_005fdbd_005fwrap">void __gdbi_dbd_wrap</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_0412_043d_0443_0442_0440_0435_043d_043d_0438_0435-_0444_0443_043d_043a_0446_0438_0438">Внутренние функции</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-void-_005f_005fmysql_005fclose_005fg_005fdb_005fhandle_0028gdbi_005fdb_005fhandle_005ft_002a-dbh_0029">void __mysql_close_g_db_handle(gdbi_db_handle_t* dbh)</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_041a_0430_043a-_043f_0438_0441_0430_0442_044c-_043f_043b_0430_0433_0438_043d_044b">Как писать плагины</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-void-_005f_005fmysql_005fquery_005fg_005fdb_005fhandle_0028gdbi_005fdb_005fhandle_005ft_002a-dbh_002c-char_002a-query_0029">void __mysql_query_g_db_handle(gdbi_db_handle_t* dbh, char* query)</a>:</td><td>&nbsp;</td><td valign="top"><a href="#g_t_041a_0430_043a-_043f_0438_0441_0430_0442_044c-_043f_043b_0430_0433_0438_043d_044b">Как писать плагины</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+</table>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438_ab_letter-V"><b>V</b></a>
+ &nbsp; 
+</td></tr></table>
+
+<hr>
+<span id="g_t_0417_0430_043a_043b_044e_0447_0435_043d_0438_0435"></span><div class="header">
+<p>
+Previous: <a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" accesskey="p" rel="prev">Все функции</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#g_t_0412_0441_0435-_0444_0443_043d_043a_0446_0438_0438" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Zakliuchenie"></span><h2 class="chapter">6 Заключение</h2>
+<p>Это все, на любые другие вопросы, смотреть исходный код :)
+</p>
+<p>Этот документ был создан Линас Vepstas мая 18 2010, с использованием
+texi2html 1.78. и пересобран Обинякиным Алексеем 16.10.2020
+</p>
+<hr>
+
+
+
+</body>
+</html>
